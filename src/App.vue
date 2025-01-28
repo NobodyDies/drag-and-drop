@@ -11,10 +11,11 @@
         :group="{ name: 'blocks', pull: 'clone', put: false }"
         :clone="cloneToolboxItem"
         :sort="false"
+        item-key="type"
       >
         <template #item="{ element }">
         <ToolboxItem>
-          <span>{{ element.icon }} {{ element.label }}</span>
+          <span>{{ element.label }}</span>
         </ToolboxItem>
         </template>
       </Draggable>
