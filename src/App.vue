@@ -28,13 +28,13 @@
         class="space-y-4 flex flex-col gap-2"
         item-key="id"
       >
-        <template #item="{ element }">
+        <template #item="{ element, index }">
         <div>
           <div class="flex justify-end gap-2 mb-2 text-sm">
-            <button class="text-blue-600">
+            <button class="text-blue-600" @click="duplicateBlock(index)">
               Duplicate
             </button>
-            <button class="text-red-600">
+            <button class="text-red-600" @click="deleteBlock(index)">
               Delete
             </button>
           </div>
@@ -45,7 +45,7 @@
         </div>
         </template>
       </Draggable>
-      <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+      <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" @click="save">
         Save (console.log)
       </button>
     </div>
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import TextBlock from '@/components/TextBlock.vue';
 import ImageBlock from '@/components/ImageBlock.vue';
 import ToolboxItem from '@/components/ToolboxItem.vue';
@@ -66,14 +66,26 @@ const toolboxItems = ([
   { type: 'image', label: '🖼 Image Block' }
 ])
 
-const blocks = ref<IBlock[]>([
-  { id: 1, type: 'text', content: ''},
-  { id: 2, type: 'image', content: ''}
-]);
+const blocks = ref<IBlock[]>([]);
 
 const cloneToolboxItem = (item: any) => {
   return { id: +Date.now(), type: item.type, content: '' };
 };
+
+function deleteBlock(index: number) {
+  blocks.value.splice(index, 1);
+}
+
+function duplicateBlock(index: number) {
+  const currentBlock = blocks.value[index];
+  const newBlock = { ...currentBlock, id: +Date.now() };
+  blocks.value.splice(index + 1, 0, newBlock);
+}
+
+function save() {
+  console.log('blocks:', toRaw(blocks.value));
+  alert('Saved! Check the console for details.');
+}
 </script>
 
 <style scoped>
